@@ -6,7 +6,7 @@ import MessageScoreModel from './mongo/models/messageScore.js';
 import ServerModel from './mongo/models/server.js';
 import { connect } from './mongo/database.js';
 import botUtils from './utils/bot-utils.js';
-import loggingUtils from './utils/logging-utils.js';
+import logError from './utils/logging-utils.js';
 
 import { initializeCommandOnMessage } from './initializeCommands.js';
 
@@ -31,7 +31,7 @@ client
         if (response) await message.channel.send(response);
     }
     catch (err) {
-        loggingUtils.logError('initializeCommandOnMessage', err, { channel: message.channel });
+        logError('initializeCommandOnMessage', err, { channel: message.channel });
     }
 })
 .on('messageReactionAdd', async (reaction) => {
@@ -39,7 +39,7 @@ client
         await onAddedReaction(reaction);
     }
     catch (err) {
-        loggingUtils.logError('onAddedReaction', err, { channel: reaction.message.channel });
+        logError('onAddedReaction', err, { channel: reaction.message.channel });
     }
 })
 .on('messageReactionRemove', async (reaction) => {
@@ -47,7 +47,7 @@ client
         await onRemovedReaction(reaction);
     }
     catch (err) {
-        loggingUtils.logError('onRemovedReaction', err, { channel: reaction.message.channel });
+        logError('onRemovedReaction', err, { channel: reaction.message.channel });
     }
 })
 .on('messageUpdate', async (oldMessage, newMessage) => {
@@ -55,7 +55,7 @@ client
         await onMessageUpdate(newMessage);
     }
     catch (err) {
-        loggingUtils.logError('onMessageUpdate', err, { channel: newMessage.channel });
+        logError('onMessageUpdate', err, { channel: newMessage.channel });
     }
 })
 .on('messageDelete', async (message) => {
@@ -63,7 +63,7 @@ client
         await onMessageDelete(message);
     }
     catch (err) {
-        loggingUtils.logError('onMessageDelete', err, { channel: message.channel });
+        logError('onMessageDelete', err, { channel: message.channel });
     }
 })
 .on('rateLimit', async (rateLimitData) => {
