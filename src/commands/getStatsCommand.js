@@ -17,7 +17,7 @@ export default {
         const response = data.reduce((accumulator, current) => {
             const currentMessageUrl = botUtils.buildMessageUrl(current);
             return accumulator + '\n'
-                + `${current.content ? current.content + ':' : ''}(${current.count} reactions): ${currentMessageUrl}`;
+                + `(${current.count} reactions) "${current.content ?? ''}": ${currentMessageUrl}`;
         }, 'Most reacted to messages in this channel:');
 
         return response;

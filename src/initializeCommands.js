@@ -12,7 +12,7 @@ async function getPrefix(guildId) {
     return prefix ?? defaultPrefix;
 }
 
-function getCommandsAvailable() {
+export function getCommandsAvailable() {
     return [getStatsCommand, clearStatsCommand, changePrefixCommand];
 }
 

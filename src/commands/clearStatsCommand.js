@@ -9,9 +9,9 @@ export default {
         if (!botUtils.isSuperadmin(message)) {
             throw new Error(message.author.username + ' does not have permission to clear stats', { cause: 'user' });
         }
-    
-        await MessageScoreModel.deleteMany({ guildId: guild.id });
-        await ServerModel.deleteMany({ guildId: guild.id });
+
+        await MessageScoreModel.deleteMany({ guildId: message.guild.id });
+        await ServerModel.deleteMany({ guildId: message.guild.id });
         return 'Stats and configurations cleared';
     }
 };

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon src/reactionInsight.js --legacy-watch",
     "start": "node src/reactionInsight.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha src/test/**/*.test.js"
   },
   "keywords": [
     "discord",
@@ -24,9 +24,12 @@
     "url": "git@github.com:hsergiu/reaction-insight.git"
   },
   "dependencies": {
+    "chai": "~4.3.10",
     "discord.js": "~14.1.2",
     "dotenv": "~16.0.1",
+    "mocha": "~10.2.0",
     "mongoose": "~6.5.1",
-    "nodemon": "~2.0.15"
+    "nodemon": "~2.0.15",
+    "sinon": "~17.0.1"
   }
 }
