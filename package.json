@@ -5,7 +5,7 @@
   "main": "src/reactionInsight.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/reactionInsight.js --legacy-watch",
+    "dev": "nodemon src/reactionInsight.js",
     "start": "node src/reactionInsight.js",
     "test": "mocha src/test/**/*.test.js",
     "lint": "eslint ."
