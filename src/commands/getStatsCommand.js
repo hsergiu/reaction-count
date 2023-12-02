@@ -3,7 +3,7 @@ import botUtils from '../utils/bot-utils.js';
 
 export default {
   value: 'stats',
-  description: 'show stats fors server\'s top 5 messages',
+  description: 'show stats for server\'s top 5 messages',
   execute: async (message) => {
     const noStatsDefaultMessage = 'No stats for the current channel';
     const data = await MessageScoreModel.findMostReactedToMessages({
