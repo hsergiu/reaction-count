@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import botUtils from '../../utils/bot-utils.js';
 
 const messageScoreSchema = new mongoose.Schema({
   guildId: String,
@@ -11,21 +12,14 @@ const messageScoreSchema = new mongoose.Schema({
 
 const MessageScoreModel = new mongoose.model('message-score', messageScoreSchema);
 
-async function upsert({
-  guildId, messageId, channelId, authorId,
-}, { count, content }) {
+async function upsert(query, { count, content }) {
   const options = { upsert: true, new: true, setDefaultOnInsert: true };
   const update = { $set: { count, content } };
-  await MessageScoreModel.findOneAndUpdate({
-    guildId, messageId, channelId, authorId,
-  }, update, options);
+  await MessageScoreModel.findOneAndUpdate(botUtils.removeUndefined(query), update, options);
 }
 
-async function findMostReactedToMessages({ guildId, channelId, limit }) {
-  const data = await MessageScoreModel.find({
-    guildId,
-    channelId,
-  }, null, { limit })
+async function findMostReactedToMessages(query, queryOptions = {}) {
+  const data = await MessageScoreModel.find(botUtils.removeUndefined(query), null, { limit: queryOptions.limit })
     .sort('-count')
     .exec();
 

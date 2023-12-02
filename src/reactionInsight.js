@@ -28,14 +28,19 @@ const client = new Discord.Client({
 async function onMessageUpdate(newMessage) {
   await botUtils.fetchPartial(newMessage);
 
-  await MessageScoreModel.upsert({
-    guildId: newMessage.guild?.id,
-    messageId: newMessage.id,
-    channelId: newMessage.channel?.id,
-    authorId: newMessage.author?.id,
-  }, {
-    content: botUtils.truncateString(newMessage.content, 200),
-  });
+  const count = botUtils.extractReactionCount(reaction.message);
+
+  if (count > 0) {
+    await MessageScoreModel.upsert({
+      guildId: newMessage.guild?.id,
+      messageId: newMessage.id,
+      channelId: newMessage.channel?.id,
+      authorId: newMessage.author?.id,
+    }, {
+      count,
+      content: botUtils.truncateString(newMessage.content, 200),
+    });
+  }
 }
 
 async function onMessageDelete(message) {

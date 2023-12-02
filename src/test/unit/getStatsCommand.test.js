@@ -24,7 +24,7 @@ describe('getStatsCommand', () => {
     messageScoreStub.resolves([]);
 
     const result = await getStatsCommand.execute(message);
-    expect(result).to.equal('No stats for the current channel');
+    expect(result).to.equal('No stats for the current server');
   });
 
   it('returns top message if data exists', async () => {
@@ -42,7 +42,7 @@ describe('getStatsCommand', () => {
     }]);
 
     const result = await getStatsCommand.execute(message);
-    expect(result).to.include('Most reacted to messages in this channel:');
+    expect(result).to.include('Most reacted to messages in this server:');
     expect(result).to.include('(5 reactions) "Test message"');
     expect(result).to.include('https://discord.com/channels/3/4/6');
   });

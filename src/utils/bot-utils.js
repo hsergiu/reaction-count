@@ -40,6 +40,16 @@ function truncateString(str, maxLength = 200) {
   return str;
 }
 
+function removeUndefined(object) {
+  for(const key in object) {
+    if (object[key] === undefined) {
+      delete object[key];
+    }
+  }
+
+  return object;
+}
+
 const botUtilsExport = {
   extractReactionCount,
   fetchPartial,
@@ -47,6 +57,7 @@ const botUtilsExport = {
   isSuperadmin,
   getPrefix,
   truncateString,
+  removeUndefined,
 };
 
 export default botUtilsExport;
