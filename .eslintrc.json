@@ -18,6 +18,7 @@
         "no-console": "off",
         "default-param-last": "off",
         "no-param-reassign": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "linebreak-style": "off"
     }
 }

@@ -26,7 +26,7 @@ export default {
 
     const response = data.reduce(
       (accumulator, current) => `${accumulator}\n<@${current._id}> (${current.totalScore} reactions)`,
-      'Top authors in this server',
+      'Top authors in this server:',
     );
 
     return response;
