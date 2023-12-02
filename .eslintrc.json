@@ -16,6 +16,8 @@
         "import/prefer-default-export": "off",
         "new-cap": "off",
         "no-console": "off",
-        "default-param-last": "off"
+        "default-param-last": "off",
+        "no-param-reassign": "off",
+        "no-underscore-dangle": "off"
     }
 }

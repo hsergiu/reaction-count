@@ -7,9 +7,8 @@ function extractLimitNumber(content) {
 
   if (match) {
     return parseInt(match[1], 10);
-  } else {
-    return null;
   }
+  return null;
 }
 
 function extractCurrentChannel(content) {
@@ -18,9 +17,8 @@ function extractCurrentChannel(content) {
 
   if (match) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 export default {

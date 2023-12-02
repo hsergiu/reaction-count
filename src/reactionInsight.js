@@ -28,7 +28,7 @@ const client = new Discord.Client({
 async function onMessageUpdate(newMessage) {
   await botUtils.fetchPartial(newMessage);
 
-  const count = botUtils.extractReactionCount(reaction.message);
+  const count = botUtils.extractReactionCount(newMessage);
 
   if (count > 0) {
     await MessageScoreModel.upsert({

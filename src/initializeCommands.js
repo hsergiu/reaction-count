@@ -2,6 +2,7 @@ import helpCommand from './commands/helpCommand.js';
 import getStatsCommand from './commands/getStatsCommand.js';
 import clearStatsCommand from './commands/clearStatsCommand.js';
 import changePrefixCommand from './commands/changePrefixCommand.js';
+import getAuthorStatsCommand from './commands/getAuthorStatsCommand.js';
 
 import serverModel from './mongo/models/server.js';
 
@@ -27,6 +28,9 @@ export async function initializeCommandOnMessage(message) {
     result = await clearStatsCommand.execute(message);
   } else if (message.content.startsWith(`${prefix}${changePrefixCommand.value}`)) {
     result = await changePrefixCommand.execute(message);
+  } else if (message.content.startsWith(`${prefix}${getAuthorStatsCommand.value}`)) {
+    result = await getAuthorStatsCommand.execute(message);
   }
+
   return result;
 }

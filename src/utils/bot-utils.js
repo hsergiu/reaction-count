@@ -35,17 +35,17 @@ function getPrefix(content) {
 
 function truncateString(str, maxLength = 200) {
   if (str.length > maxLength) {
-    return str.substring(0, maxLength) + '...';
+    return `${str.substring(0, maxLength)}...`;
   }
   return str;
 }
 
 function removeUndefined(object) {
-  for(const key in object) {
+  Object.keys(object).forEach((key) => {
     if (object[key] === undefined) {
       delete object[key];
     }
-  }
+  });
 
   return object;
 }

@@ -19,9 +19,33 @@ async function upsert(query, { count, content }) {
 }
 
 async function findMostReactedToMessages(query, queryOptions = {}) {
-  const data = await MessageScoreModel.find(botUtils.removeUndefined(query), null, { limit: queryOptions.limit })
+  const data = await MessageScoreModel.find(
+    botUtils.removeUndefined(query),
+    null,
+    { limit: queryOptions.limit },
+  )
     .sort('-count')
     .exec();
+
+  return data;
+}
+
+async function findTopAuthors(query, queryOptions = {}) {
+  const data = await MessageScoreModel.aggregate([
+    {
+      $match: { guildId: query.guildId },
+    },
+    {
+      $group: {
+        _id: '$authorId',
+        totalScore: { $sum: '$count' },
+      },
+    },
+    {
+      $sort: { totalScore: -1 },
+    },
+    { $limit: queryOptions.limit },
+  ]);
 
   return data;
 }
@@ -43,6 +67,7 @@ const messageScoreExport = {
   findMostReactedToMessages,
   deleteMany,
   deleteOne,
+  findTopAuthors,
 };
 
 export default messageScoreExport;
