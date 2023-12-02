@@ -14,7 +14,7 @@ async function getPrefix(guildId) {
 }
 
 export function getCommandsAvailable() {
-  return [getStatsCommand, clearStatsCommand, changePrefixCommand];
+  return [getStatsCommand, clearStatsCommand, changePrefixCommand, getAuthorStatsCommand];
 }
 
 export async function initializeCommandOnMessage(message) {
