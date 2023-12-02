@@ -11,5 +11,7 @@ Also, if it was removed from the server and added back, it doesn't fetch the lat
 Default prefix is '_'. It can be changed.
 
 Commands available: help, get-stats, clear-stats, change-prefix
+ 
+![ci](https://github.com/hsergiu/reaction-count/actions/workflows/main-workflow.yml/badge.svg) 
 
 > Setup: docker and npm are required to install dependencies or to run the containerized app.
