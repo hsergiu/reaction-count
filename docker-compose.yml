@@ -17,6 +17,7 @@ services:
     container_name: reaction-insight
     volumes:
       - .:/home/bot/reaction-insight
+      - /home/bot/reaction-insight/node_modules
     command: npm run dev
     depends_on:
       - mongodb

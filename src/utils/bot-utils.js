@@ -33,12 +33,20 @@ function getPrefix(content) {
   return null;
 }
 
+function truncateString(str, maxLength = 200) {
+  if (str.length > maxLength) {
+    return str.substring(0, maxLength) + '...';
+  }
+  return str;
+}
+
 const botUtilsExport = {
   extractReactionCount,
   fetchPartial,
   buildMessageUrl,
   isSuperadmin,
   getPrefix,
+  truncateString,
 };
 
 export default botUtilsExport;

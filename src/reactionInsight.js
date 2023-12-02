@@ -34,7 +34,7 @@ async function onMessageUpdate(newMessage) {
     channelId: newMessage.channel?.id,
     authorId: newMessage.author?.id,
   }, {
-    content: newMessage.content,
+    content: botUtils.truncateString(newMessage.content, 200),
   });
 }
 
@@ -56,7 +56,7 @@ async function onAddedReaction(reaction) {
     authorId: reaction.message.author?.id,
   }, {
     count: botUtils.extractReactionCount(reaction.message),
-    content: reaction.message.content,
+    content: botUtils.truncateString(reaction.message.content, 200),
   });
 }
 
@@ -70,7 +70,7 @@ async function onRemovedReaction(reaction) {
     authorId: reaction.message.author?.id,
   }, {
     count: botUtils.extractReactionCount(reaction.message),
-    content: reaction.message.content,
+    content: botUtils.truncateString(reaction.message.content, 200),
   });
 }
 

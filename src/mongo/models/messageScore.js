@@ -4,6 +4,7 @@ const messageScoreSchema = new mongoose.Schema({
   guildId: String,
   channelId: String,
   count: Number,
+  content: String,
   messageId: String,
   authorId: String,
 });
