@@ -7,7 +7,7 @@ on:
     branches: [ deploy ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,26 +20,28 @@ jobs:
 
     - name: Cache Node.js modules
       uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{ runner.os }}-node-
 
-    - name: Install dependencies
-      run: npm install
+    - name: Install dependencies, lint, and test
+      run: |
+        npm install
+        npm run lint
+        npm test
 
-    - name: Run lint
-      run: npm run lint
+    - name: Login to Amazon ECR
+      run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - name: Run tests
-      run: npm test
-
-    - name: Build Docker image
-      run: docker-compose build
-
-      # subsequent image push tbd
+    - name: Build and push Docker images to Amazon ECR
+      run: |
+        docker-compose build
+        docker-compose push
+      env:
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
