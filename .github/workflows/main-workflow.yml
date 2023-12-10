@@ -7,7 +7,7 @@ on:
     branches: [ deploy ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,73 +20,28 @@ jobs:
 
     - name: Cache Node.js modules
       uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{ runner.os }}-node-
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run lint
-      run: npm run lint
-
-    - name: Run tests
-      run: npm test
-
-    - name: Build Docker image
-      run: docker-compose build
+    - name: Install dependencies, lint, and test
+      run: |
+        npm install
+        npm run lint
+        npm test
 
     - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    # repo secrets req: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-    
-    - name: Push MongoDB image to Amazon ECR
-      run: |
-        docker tag mongo:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mongo:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mongo:latest
-
-    - name: Push Reaction Insight image to Amazon ECR
-      run: |
-        docker tag reaction-insight:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/reaction-insight:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/reaction-insight:latest
-  
-    - name: Build, tag, and push image to Amazon ECR
+      run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: reaction-insight
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Prepare Dockerrun.aws.json for deployment
-      run: |
-        sed -i 's|AWS_ACCOUNT_ID_PLACEHOLDER|${{ secrets.AWS_ACCOUNT_ID }}|g' Dockerrun.aws.json
-        sed -i 's|AWS_REGION_PLACEHOLDER|${{ secrets.AWS_REGION }}|g' Dockerrun.aws.json
-        sed -i 's|MONGO_USER_PLACEHOLDER|${{ secrets.MONGO_USER }}|g' Dockerrun.aws.json
-        sed -i 's|MONGO_PASS_PLACEHOLDER|${{ secrets.MONGO_PASS }}|g' Dockerrun.aws.json
-  
-
-    - name: Deploy to AWS Elastic Beanstalk
-      run: |
-        zip deploy.zip Dockerrun.aws.json
-        aws s3 cp deploy.zip s3://${{ env.S3_BUCKET }}/deploy.zip
-        aws elasticbeanstalk create-application-version --application-name ${{ env.AWS_APP_NAME }} \
-            --version-label ${{ github.sha }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key=deploy.zip
-        aws elasticbeanstalk update-environment --application-name ${{ env.AWS_APP_NAME }} \
-            --environment-name ${{ env.AWS_ENV_NAME }} --version-label ${{ github.sha }}
-      env:
-        AWS_APP_NAME: discord-bot
-        AWS_ENV_NAME: discord-bot-env
-        S3_BUCKET: discord-bot-deploy-storage
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Build and push Docker images to Amazon ECR
+      run: |
+        docker-compose build
+        docker-compose push
+      env:
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         AWS_REGION: ${{ secrets.AWS_REGION }}

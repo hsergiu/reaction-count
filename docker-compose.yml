@@ -14,6 +14,7 @@ services:
     command: mongod --logpath /dev/null 
   reaction-insight:
     build: .
+    # image: <your-id>.dkr.ecr.<your-region>.amazonaws.com/reaction-insight:latest
     container_name: reaction-insight
     volumes:
       - .:/home/bot/reaction-insight
