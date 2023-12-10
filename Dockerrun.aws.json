@@ -1,0 +1,59 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "mongodb",
+      "image": "AWS_ACCOUNT_ID_PLACEHOLDER.dkr.ecr.AWS_REGION_PLACEHOLDER.amazonaws.com/mongo:latest",
+      "essential": true,
+      "memory": 256,
+      "environment": [
+        {"name": "MONGO_INITDB_ROOT_USERNAME", "value": "MONGO_USER_PLACEHOLDER"},
+        {"name": "MONGO_INITDB_ROOT_PASSWORD", "value": "MONGO_PASS_PLACEHOLDER"}
+      ],
+      "portMappings": [
+        {
+          "hostPort": 27017,
+          "containerPort": 27017
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "mongodb_data",
+          "containerPath": "/data/db"
+        }
+      ]
+    },
+    {
+      "name": "reaction-insight",
+      "image": "AWS_ACCOUNT_ID_PLACEHOLDER.dkr.ecr.AWS_REGION_PLACEHOLDER.amazonaws.com/reaction-insight:latest",
+      "essential": true,
+      "memory": 128,
+      "dependsOn": [
+        {
+          "containerName": "mongodb",
+          "condition": "START"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "reaction-insight",
+          "containerPath": "/home/bot/reaction-insight"
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "name": "mongodb_data",
+      "host": {
+        "sourcePath": "/mongodb_data"
+      }
+    },
+    {
+      "name": "reaction-insight",
+      "host": {
+        "sourcePath": "/reaction_insight"
+      }
+    }
+  ]
+}
