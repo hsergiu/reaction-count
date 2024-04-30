@@ -39,11 +39,6 @@ Find who are the top authors of the current server based on the reaction count t
 
 > The other commands that are not showcased: change-prefix, clear-stats
 
-## Pipeline
-![ci](https://github.com/hsergiu/reaction-count/actions/workflows/main-workflow.yml/badge.svg) 
-
-Github actions CI with 4 stages that should be mentioned: linting, testing, building, image push to AWS ECR. Defined [here](.github/workflows/main-workflow.yml).
-
 ## Local setup
 - requirements: docker, npm
 - define your .env file with credentials
